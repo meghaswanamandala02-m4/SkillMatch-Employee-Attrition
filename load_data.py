@@ -1,42 +1,37 @@
+
 import os
 import pandas as pd
 
 
-# Dataset Path
-DATA_PATH = r"D:\ML PPTS\Project\WA_Fn-UseC_-HR-Employee-Attrition.csv"
+# Exact dataset path
+DATA_PATH = (
+    r"D:\2 nd year\ML\Skill Math\Project"
+    r"\WA_Fn-UseC_-HR-Employee-Attrition.csv"
+)
 
 
-def load_data(path: str = DATA_PATH) -> pd.DataFrame:
+def load_data(path=DATA_PATH):
+    """Load the employee attrition dataset."""
 
-    if not os.path.exists(path):
+    if not os.path.isfile(path):
         raise FileNotFoundError(
             f"Dataset not found: {path}"
         )
 
-    df = pd.read_csv(path)
-
-    return df
+    return pd.read_csv(path)
 
 
 def get_dataset_info():
+    """Return dataset information for the web application."""
 
     df = load_data()
 
     return {
-
-        # Dataset information
-        "dataset_name": DATA_PATH,
-
+        "dataset_name": os.path.basename(DATA_PATH),
         "rows": df.shape[0],
-
         "columns": df.shape[1],
-
-
-        # Reference-style information
         "n_rows": df.shape[0],
-
         "n_cols": df.shape[1],
-
         "column_names": list(df.columns),
 
         "column_info": [
@@ -58,8 +53,6 @@ def get_dataset_info():
             for col in df.columns
         },
 
-
-        # First 10 rows
         "preview": df.head(10).to_html(
             classes="table preview-table",
             index=False
@@ -68,13 +61,11 @@ def get_dataset_info():
 
 
 def get_data_summary(df: pd.DataFrame) -> dict:
+    """Return a summary of a DataFrame."""
 
-    summary = {
-
+    return {
         "n_rows": df.shape[0],
-
         "n_cols": df.shape[1],
-
         "columns": list(df.columns),
 
         "dtypes": {
@@ -89,14 +80,16 @@ def get_data_summary(df: pd.DataFrame) -> dict:
 
         "preview": df.head(10).to_dict(
             orient="records"
-        ),
+        )
     }
-
-    return summary
 
 
 if __name__ == "__main__":
+    try:
+        df = load_data()
+        print("Dataset loaded successfully!")
+        print(f"Dataset shape: {df.shape[0]} rows, {df.shape[1]} columns")
+        print(get_data_summary(df))
 
-    data = load_data()
-
-    print(get_data_summary(data))
+    except Exception as e:
+        print(f"Error loading dataset: {e}")
